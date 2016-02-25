@@ -1,0 +1,78 @@
+#+AUTHOR: Group 59
+#+TITLE: TTM4100 - KTN1
+
+
+* General description
+
+* Class diagrams
+** Client side
+Stuff
+
+#+begin_src plantuml :file client_class.png
+skinparam classAttributeIconSize 0
+
+class Client{
++string[] history
++__init__(self, host, server_port)
++run(self)
++disconnect(self)
++receive_message(self, message)
++send_payload(self, data)
+}
+
+class MessageParser{
++__init__(self)
++parse(self,payload)
++parse_error(self, payload)
++parse_message(self, payload)
++parse_history(self, payload)
+}
+
+class MessageReceiver{
++__init__(self, client, connection)
++run(self)
+}
+
+MessageParser - Client
+Client - MessageReceiver
+
+#+end_src
+
+#+RESULTS:
+[[file:client_class.png]]
+
+#+BEGIN_COMMENT
+@startuml
+class Dummy {
+  String data
+  void methods()
+}
+
+class Flight {
+   flightNumber : Integer
+   departureTime : Date
+}
+@enduml
+#+END_COMMENT
+** Server
+Stuff aand stuff
+
+#+begin_src plantuml :file server_class.png
+set namespaceSeparator none
+skinparam classAttributeIconSize 0
+
+class "ClientHandler(SocketServer.BaseRequestHandler)" as ClientHandler{
++handle(self)
+}
+
+class "ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer)" as TCPserver{
+}
+
+ClientHandler - TCPserver
+
+#+end_src
+
+#+RESULTS:
+[[file:server_class.png]]
+
+* Sequence diagrams
