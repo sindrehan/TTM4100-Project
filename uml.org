@@ -28,7 +28,7 @@ class MessageParser{
 +parse_history(self, payload)
 }
 
-class MessageReceiver{
+class "MessageReceiver(Thread)" as MessageReceiver{
 +__init__(self, client, connection)
 +run(self)
 }
