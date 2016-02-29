@@ -1,4 +1,4 @@
-% Created 2016-02-29 ma. 11:25
+% Created 2016-02-29 ma. 22:14
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -28,24 +28,39 @@
 \maketitle
 \tableofcontents
 
-
-\section{Class diagrams}
+\section{Intro}
 \label{sec-1}
+General description
+We have introduced a new class called Server. It contains a dictionary with all
+the clients and their chat history. This class is included in Clienthandler so
+ that we can control if a username is available and retrieve the chat history of
+ that specific client.
+\\
+The class diagrams shows the classes with their functions and variables. We have
+ two sequence diagrams that shows a login sequence and a sequence of a message
+ being sent out from a client to all the other clients connected to the server.
+ A Clienthandler is set up for each client connected to the server via
+ threading, so that all communication with the server is handled in parallel.
+ The protocol used for sending information is JSON. The class MessageParser
+ encryptes and decryptes the messages for the client, whereas the messaged on
+ the server side are parsed and encrypted in the clienthandler.
+\section{Class diagrams}
+\label{sec-2}
 \subsection{Client}
-\label{sec-1-1}
+\label{sec-2-1}
 \includegraphics[width=.9\linewidth]{client_class.png}
 \subsection{Server}
-\label{sec-1-2}
+\label{sec-2-2}
 \includegraphics[width=.9\linewidth]{server_class.png}
 
 \section{Sequence diagrams}
-\label{sec-2}
+\label{sec-3}
 \subsection{Log in}
-\label{sec-2-1}
+\label{sec-3-1}
 \includegraphics[width=.9\linewidth]{sequence_login.png}
 
 \subsection{Send message}
-\label{sec-2-2}
+\label{sec-3-2}
 \includegraphics[width=.9\linewidth]{sequence_msg.png}
 % Emacs 24.5.1 (Org mode 8.2.10)
 \end{document}
