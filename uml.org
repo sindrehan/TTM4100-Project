@@ -1,13 +1,9 @@
 #+AUTHOR: Group 59
 #+TITLE: TTM4100 - KTN1
-
-
 * General description
 
 * Class diagrams
-** Client side
-Stuff
-
+** Client
 #+begin_src plantuml :file client_class.png
 skinparam classAttributeIconSize 0
 
@@ -55,8 +51,6 @@ class Flight {
 @enduml
 #+END_COMMENT
 ** Server
-Stuff aand stuff
-
 #+begin_src plantuml :file server_class.png
 set namespaceSeparator none
 skinparam classAttributeIconSize 0
@@ -68,6 +62,12 @@ class "ClientHandler(SocketServer.BaseRequestHandler)" as ClientHandler{
 class "ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer)" as TCPserver{
 }
 
+class "Server.py" as server{
++histoy
++client_list
++
+}
+
 ClientHandler - TCPserver
 
 #+end_src
@@ -76,3 +76,99 @@ ClientHandler - TCPserver
 [[file:server_class.png]]
 
 * Sequence diagrams
+** Log in
+#+begin_src plantuml :file sequence_login.png
+actor user
+Participant Client
+Participant MR as "MessageReceiver"
+Participant MP as "MessageParser"
+Participant CH as "ClientHandler"
+Participant Server as "Server.py"
+Participant TTP as "ThreadedTCPserver"
+
+Activate Client
+Activate MR
+Activate CH
+Activate TTP
+Activate Server
+
+note right of CH: Listens for\n requests
+/ note right of TTP: Listens for\n connections
+
+Client -> Client: run()
+Client -> TTP: connect()
+Client -> MR: start()
+TTP -> CH: start()
+CH -> CH: handle()
+
+user -> Client: login user
+Client -> Client: Create JSON (msg)
+Client -> CH: send(msg)
+CH -> CH: parse(msg)
+CH -> Server: add_user(user)
+Server --> CH: True
+CH -> CH: Create JSON\n(message)
+CH -> MR: send(message)
+MR --> Client: receive_message(message)
+Client -> MP: parse(message)
+Activate MP
+MP --> Client: "Login success"
+Deactivate MP
+Client -> user: print "Success"
+
+CH -> Server: get_history()
+CH -> MR: send(history)
+
+MR -> Client: receive_message(history)
+Client -> MP: parse(history)
+Activate MP
+MP --> Client: History
+Deactivate MP
+Client -> user: print "History"
+
+
+
+
+#+end_src
+
+#+RESULTS:
+[[file:sequence_login.png]]
+
+** Send message
+#+begin_src plantuml :file sequence_msg.png
+actor user
+Participant Client
+Participant MP as "MessageParser"
+Participant MR as "MessageReceiver"
+
+Participant CH as "ClientHandler"
+Participant TTP as "ThreadedTCPserver"
+
+Activate Client
+Activate MR
+Activate CH
+Activate TTP
+
+
+note right of CH: Listens for\n requests
+/ note right of TTP: Listens for\n connections
+user -> Client: msg "Message"
+Client -> Client: Create JSON
+Client -> CH: send(msg)
+CH -> CH: parse(msg)
+CH -> TTP: send(message)
+TTP -> CH: send(message)
+CH -> CH: Create JSON
+CH -> MR: send(message)
+MR -> Client: receive_message(message)
+Client -> MP: parse(message)
+Activate MP
+MP -> MP: "Message"
+MP -> Client: "Message"
+Deactivate MP
+Client -> user: print "Message"
+
+#+end_src
+
+#+RESULTS:
+[[file:sequence_msg]]

@@ -15,15 +15,14 @@ class Client:
 
         # Set up the socket connection to the server
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        
+
         # TODO: Finish init process with necessary code
-        self.history = 
         self.run()
 
     def run(self):
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
-        
+
     def disconnect(self):
         # TODO: Handle disconnection
         self.connection.close()
@@ -35,10 +34,10 @@ class Client:
 
     def send_payload(self, data):
         # TODO: Handle sending of a payload
-        
+
         message = {"request": data, "content": }
 
-        
+
     # More methods may be needed!
 
 
@@ -56,7 +55,7 @@ if __name__ == '__main__':
     To exit, please write 'exit'
     """
     running = True
-    while running:  
+    while running:
         raw = raw_input(":")
         if raw == "exit":
             running = False

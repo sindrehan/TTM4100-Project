@@ -6,6 +6,11 @@ Variables and functions that must be used by all the ClientHandler objects
 must be written here (e.g. a dictionary for connected clients)
 """
 
+#clients (dictionary)
+#history (list of JSON strings)
+
+#
+
 class ClientHandler(SocketServer.BaseRequestHandler):
     """
     This is the ClientHandler class. Everytime a new client connects to the
@@ -25,7 +30,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         # Loop that listens for messages from the client
         while True:
             received_string = self.connection.recv(4096)
-            
+
             # TODO: Add handling of received payload from client
 
 
