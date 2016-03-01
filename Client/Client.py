@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import socket
+import json
 from MessageReceiver import MessageReceiver
 from MessageParser import MessageParser
 
@@ -16,28 +17,29 @@ class Client:
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = server_port
-
-        # TODO: Finish init process with necessary code
-        self.run()
+        worker = MessageReceiver(self, self.connection)
+        worker.daemon = True
+        worker.start()
 
     def run(self):
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
 
     def disconnect(self):
-        # TODO: Handle disconnection
         self.connection.close()
 
     def receive_message(self, message):
         # TODO: Handle incoming message
-        response = MessageParser.parse()
-        print response
+        print message
+        #response = MessageParser.parse()
+        #print response
 
     def send_payload(self, data):
         # TODO: Handle sending of a payload
 
         message = {"request": data.partition(' ')[0],\
                    "content": data.partition(' ')[2] }
+        self.connection.sendall(json.dumps(message))
 
 
     # More methods may be needed!
