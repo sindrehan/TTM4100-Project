@@ -29,6 +29,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.connection = self.request
         self.logged_in = False
 
+        global messages
+        global clients
         # Loop that listens for messages from the client
         while True:
             received_string = self.connection.recv(4096)
@@ -38,8 +40,11 @@ class ClientHandler(SocketServer.BaseRequestHandler):
             content = received['content']
 
             if client_request == "login":
-                if content in users.values():
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'error','content':'Username taken'}
+                if content in clients.values():
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'error',
+                                'content':'Username taken'}
                     self.send_data(response)
                 else:
                     #login successfull
@@ -47,30 +52,48 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                     clients[self] = content
                     #Send history
 
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'info','content':"Login succesful"}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'info',
+                                'content':"Login succesful"}
                     self.send_data(response)
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'history','content':'\n'.join(messages)}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'history',
+                                'content':'\n'.join(messages)}
                     self.send_data(response)
                     self.logged_in = True
 
             elif client_request == "logout":
                 if self.logged_in:
                     del clients[self]
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'info','content':"Logout succesful"}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'info',
+                                'content':"Logout succesful"}
                     self.send_data(response)
                     self.logged_in = False
                 else:
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'error','content':'Not logged in'}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'error',
+                                'content':'Not logged in'}
                     self.send_data(response)
 
             elif client_request == "msg":
                 if self.logged_in:
-                    messages += [clients[client] + " " + content]
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':clients[self],'response':'message','content':content}
+                    messages += [clients[self] + " " + content]
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':clients[self],
+                                'response':'message',
+                                'content':content}
                     for client in clients:
                         client.send_data(response)
                 else:
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'error','content':'Not logged in'}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'error',
+                                'content':'Not logged in'}
                     self.send_data(response)
 
             elif client_request == "names":
@@ -78,20 +101,33 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                     names = ""
                     for client in clients:
                         names += clients[client] + "\n"
-                        response = {'timestamp':time.strftime("%H:%M:%S"),'sender':clients[self],'response':'info','content':names}
+                        response = {'timestamp':time.strftime("%H:%M:%S"),
+                                    'sender':clients[self],
+                                    'response':'info',
+                                    'content':names}
                         self.send_data(response)
                 else:
-                    response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'error','content':'Not logged in'}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'error',
+                                'content':'Not logged in'}
                     self.send_data(response)
 
             elif client_request == "help":
-                response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'info','content':help_text}
+                response = {'timestamp':time.strftime("%H:%M:%S"),
+                            'sender':'server',
+                            'response':'info',
+                            'content':help_text}
                 self.send_data(response)
             else:
-                response = {'timestamp':time.strftime("%H:%M:%S"),'sender':'server','response':'error','content':"Unknown command"}
+                response = {'timestamp':time.strftime("%H:%M:%S"),
+                            'sender':'server',
+                            'response':'error',
+                            'content':"Unknown command"}
                 self.send_data(response)
 
     def send_data(self,data):
+        print "Data to Client: ", data
         self.request.sendall(json.dumps(data))
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
