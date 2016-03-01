@@ -2,6 +2,7 @@
 import socket
 from MessageReceiver import MessageReceiver
 from MessageParser import MessageParser
+import json
 
 class Client:
     """
@@ -16,7 +17,6 @@ class Client:
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = server_port
-
         # TODO: Finish init process with necessary code
         self.run()
 
@@ -38,7 +38,7 @@ class Client:
 
         message = {"request": data.partition(' ')[0],\
                    "content": data.partition(' ')[2] }
-
+        self.connection.sendall(json.dumps(message))
 
     # More methods may be needed!
 
