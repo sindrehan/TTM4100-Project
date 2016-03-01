@@ -12,9 +12,10 @@ class Client:
         """
         This method is run when creating a new Client object
         """
-
         # Set up the socket connection to the server
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.host = host
+        self.server_port = server_port
 
         # TODO: Finish init process with necessary code
         self.run()
@@ -35,7 +36,8 @@ class Client:
     def send_payload(self, data):
         # TODO: Handle sending of a payload
 
-        message = {"request": data, "content": }
+        message = {"request": data.partition(' ')[0],\
+                   "content": data.partition(' ')[2] }
 
 
     # More methods may be needed!
@@ -59,5 +61,6 @@ if __name__ == '__main__':
         raw = raw_input(":")
         if raw == "exit":
             running = False
+            client.disconnect()
         else:
             client.send_payload(raw)
