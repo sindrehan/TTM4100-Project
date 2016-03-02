@@ -82,11 +82,13 @@ class ClientHandler(SocketServer.BaseRequestHandler):
 
             elif client_request == "msg":
                 if self.logged_in:
-                    messages += [clients[self] + " " + content]
+
                     response = {'timestamp':time.strftime("%H:%M:%S"),
                                 'sender':clients[self],
                                 'response':'message',
                                 'content':content}
+                    messages += ["<"+ response.get('timestamp') + "> " +
+                                 clients[self] + ": " + content]
                     for client in clients:
                         client.send_data(response)
                 else:
