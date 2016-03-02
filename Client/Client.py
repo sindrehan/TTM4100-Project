@@ -3,6 +3,7 @@ import socket
 import json
 from MessageReceiver import MessageReceiver
 from MessageParser import MessageParser
+import json
 
 class Client:
     """
