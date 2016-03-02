@@ -10,20 +10,18 @@ class MessageParser():
         }
 
     def parse(self, payload):
-        payload = json.loads(self)# decode the JSON object
+        payload = json.loads(payload)
 
         if payload['response'] in self.possible_responses:
             return self.possible_responses[payload['response']](payload)
         else:
-            pass
-            # Response not valid
+            return "Received invalid response from server!"
 
     def parse_error(self, payload):
-        return "Error:",
-        pass
+        return "<"+payload.get('timestamp')+"> Error: "+payload.get('content')
     def parse_info(self, payload):
-        pass
+        return "<"+payload.get('timestamp')+"> Info: "+payload.get('content')
     def parse_msg(self, payload):
-        pass
+        return "<"+payload.get('timestamp')+">"+payload.get('sender')+": "+payload.get('content')
     def parse_history(self, payload):
-        pass
+        return payload.get('content')

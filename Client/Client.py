@@ -27,7 +27,7 @@ class Client:
         worker.start()
         running = True
         while running:
-            raw = raw_input(":")
+            raw = raw_input()
             if raw == "exit":
                 running = False
                 self.disconnect()
@@ -38,7 +38,8 @@ class Client:
 
     def receive_message(self, message):
         #print message
-        response = MessageParser.parse(message)
+        parser = MessageParser()
+        response = parser.parse(message)
         print response
     def send_payload(self, data):
         message = {"request": data.partition(' ')[0],\
