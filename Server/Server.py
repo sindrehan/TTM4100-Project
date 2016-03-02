@@ -34,7 +34,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         # Loop that listens for messages from the client
         while True:
             received_string = self.connection.recv(4096)
-
+            if not received_string:
+                pass
             received = json.loads(received_string)
             client_request = received['request']
             content = received['content']
@@ -60,7 +61,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                     response = {'timestamp':time.strftime("%H:%M:%S"),
                                 'sender':'server',
                                 'response':'history',
-                                'content':'\n'.join(messages)}
+                                'content':messages}
                     self.send_data(response)
                     self.logged_in = True
 
@@ -87,8 +88,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                                 'sender':clients[self],
                                 'response':'message',
                                 'content':content}
-                    messages += ["<"+ response.get('timestamp') + "> " +
-                                 clients[self] + ": " + content]
+                    messages.append(json.dumps(response))
                     for client in clients:
                         client.send_data(response)
                 else:
@@ -102,12 +102,12 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 if self.logged_in:
                     names = ""
                     for client in clients:
-                        names += clients[client] + "\n"
+                        names += clients[client] + " "
                         response = {'timestamp':time.strftime("%H:%M:%S"),
                                     'sender':clients[self],
                                     'response':'info',
                                     'content':names}
-                        self.send_data(response)
+                    self.send_data(response)
                 else:
                     response = {'timestamp':time.strftime("%H:%M:%S"),
                                 'sender':'server',
@@ -130,6 +130,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
 
     def send_data(self,data):
         self.request.sendall(json.dumps(data))
+        self.request.sendall("\n")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     """

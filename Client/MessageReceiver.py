@@ -24,6 +24,8 @@ class MessageReceiver(Thread):
         while True:
             data = self.connection.recv(1024)
             if data:
-                self.client.receive_message(data)
+                for message in data.split("\n"):
+                    if message:
+                        self.client.receive_message(message)
             else:
                 sys.exit()
