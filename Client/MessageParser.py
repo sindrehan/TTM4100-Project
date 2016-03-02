@@ -7,7 +7,6 @@ class MessageParser():
             'info': self.parse_info,
             'message': self.parse_msg,
             'history': self.parse_history,
-	    # More key:values pairs are needed
         }
 
     def parse(self, payload):
@@ -20,19 +19,11 @@ class MessageParser():
             # Response not valid
 
     def parse_error(self, payload):
+        return "Error:",
         pass
     def parse_info(self, payload):
         pass
-    def parse_login(self, payload):
-        pass
-    def parse_logout(self, payload):
-        pass
     def parse_msg(self, payload):
-        pass
-    def parse_help(self, payload):
         pass
     def parse_history(self, payload):
         pass
-
-
-    # Include more methods for handling the different responses...

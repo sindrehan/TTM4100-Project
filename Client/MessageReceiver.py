@@ -14,17 +14,16 @@ class MessageReceiver(Thread):
         This method is executed when creating a new MessageReceiver object
         """
         # Flag to run thread as a daemon
-        Thread.__init__(self)
+        super(MessageReceiver, self).__init__()
         self.daemon = True
         self.client = client
         self.connection = connection
-        #super(MessageReceiver, self).__init__()
+
 
     def run(self):
         while True:
             data = self.connection.recv(1024)
             if data:
-                print data
                 self.client.receive_message(data)
             else:
                 sys.exit()

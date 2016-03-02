@@ -127,7 +127,6 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 self.send_data(response)
 
     def send_data(self,data):
-        print "Data to Client: ", data
         self.request.sendall(json.dumps(data))
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):

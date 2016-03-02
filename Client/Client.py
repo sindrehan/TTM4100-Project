@@ -17,33 +17,33 @@ class Client:
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = server_port
-        worker = MessageReceiver(self, self.connection)
-        worker.daemon = True
-        worker.start()
+        self.run()
 
     def run(self):
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
-
+        worker = MessageReceiver(self, self.connection)
+        worker.daemon = True
+        worker.start()
+        running = True
+        while running:
+            raw = raw_input(":")
+            if raw == "exit":
+                running = False
+                self.disconnect()
+            else:
+                self.send_payload(raw)
     def disconnect(self):
         self.connection.close()
 
     def receive_message(self, message):
-        # TODO: Handle incoming message
-        print message
-        #response = MessageParser.parse()
-        #print response
-
+        #print message
+        response = MessageParser.parse(message)
+        print response
     def send_payload(self, data):
-        # TODO: Handle sending of a payload
-
         message = {"request": data.partition(' ')[0],\
                    "content": data.partition(' ')[2] }
         self.connection.sendall(json.dumps(message))
-
-
-    # More methods may be needed!
-
 
 if __name__ == '__main__':
     """
@@ -52,17 +52,9 @@ if __name__ == '__main__':
 
     No alterations are necessary
     """
-    client = Client('localhost', 9998)
     print """Welcome to Chat9000. To log in, please enter: 'login <username>'
 
     To log out, please write 'logout'
     To exit, please write 'exit'
     """
-    running = True
-    while running:
-        raw = raw_input(":")
-        if raw == "exit":
-            running = False
-            client.disconnect()
-        else:
-            client.send_payload(raw)
+    client = Client('localhost', 9998)
