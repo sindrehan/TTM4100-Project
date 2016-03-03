@@ -38,7 +38,6 @@ class Client:
         self.connection.close()
 
     def receive_message(self, message):
-        #print message
         parser = MessageParser()
         response = parser.parse(message)
         print response

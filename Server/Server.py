@@ -31,7 +31,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
 
         global messages
         global clients
-        # Loop that listens for messages from the client
+        # Loop that listens and handles messages from the client
         while True:
             received_string = self.connection.recv(4096)
             if not received_string:

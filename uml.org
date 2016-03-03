@@ -1,8 +1,7 @@
 #+AUTHOR: Group 59
 #+TITLE: TTM4100 - KTN1
-* Intro
-General description
-We have introduced a new class called Server. It contains a dictionary with all
+* General description
+We have introduced a new "class" called Server. It contains a dictionary with all
 the clients and their chat history. This class is included in Clienthandler so
  that we can control if a username is available and retrieve the chat history of
  that specific client.
@@ -21,8 +20,7 @@ The class diagrams shows the classes with their functions and variables. We have
 skinparam classAttributeIconSize 0
 
 class Client{
-+string[] history
-+__init__(self, host, server_port)
++__init__(self, host, server_port)y
 +run(self)
 +disconnect(self)
 +receive_message(self, message)
@@ -32,6 +30,7 @@ class Client{
 class MessageParser{
 +__init__(self)
 +parse(self,payload)
++parse_info(self, payload)
 +parse_error(self, payload)
 +parse_message(self, payload)
 +parse_history(self, payload)
@@ -50,19 +49,6 @@ Client - MessageReceiver
 #+RESULTS:
 [[file:client_class.png]]
 
-#+BEGIN_COMMENT
-@startuml
-class Dummy {
-  String data
-  void methods()
-}
-
-class Flight {
-   flightNumber : Integer
-   departureTime : Date
-}
-@enduml
-#+END_COMMENT
 ** Server
 #+begin_src plantuml :file server_class.png
 set namespaceSeparator none
@@ -70,18 +56,23 @@ skinparam classAttributeIconSize 0
 
 class "ClientHandler(SocketServer.BaseRequestHandler)" as ClientHandler{
 +handle(self)
++send_data(self)
 }
 
 class "ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer)" as TCPserver{
 }
 
 class "Server.py" as server{
-+histoy
-+client_list
-+
++messages[]
++clients{}
++help_text
++HOST
++PORT
++server
 }
 
 ClientHandler - TCPserver
+TCPserver - server
 
 #+end_src
 
