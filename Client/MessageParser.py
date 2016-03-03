@@ -22,10 +22,11 @@ class MessageParser():
     def parse_info(self, payload):
         return "<"+payload.get('timestamp')+"> Info: "+payload.get('content')
     def parse_msg(self, payload):
-        return "<"+payload.get('timestamp')+">"+payload.get('sender')+": "+payload.get('content')
+        return "<"+payload.get('timestamp')+"> "+payload.get('sender')+": "+payload.get('content')
     def parse_history(self, payload):
         history_list = payload.get('content')
         history = ""
         for line in history_list:
             history += self.parse_msg(json.loads(line))
+            history += "\n"
         return history
