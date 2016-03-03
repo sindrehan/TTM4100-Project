@@ -1,3 +1,4 @@
+#Project TTM4100
 ## General description
 We have introduced a new class called Server. It contains a dictionary with all
 the clients and their chat history. This class is included in Clienthandler so
