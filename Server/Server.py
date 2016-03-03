@@ -29,6 +29,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.connection = self.request
         self.logged_in = False
 
+
         global messages
         global clients
         # Loop that listens for messages from the client
