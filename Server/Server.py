@@ -29,14 +29,15 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.connection = self.request
         self.logged_in = False
 
-
         global messages
         global clients
         # Loop that listens for messages from the client
         while True:
             received_string = self.connection.recv(4096)
             if not received_string:
-                pass
+                if self in clients:
+                    del clients[self]
+                break
             received = json.loads(received_string)
             client_request = received['request']
             content = received['content']
@@ -48,12 +49,14 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                                 'response':'error',
                                 'content':'Username taken'}
                     self.send_data(response)
+                elif self.logged_in:
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':'server',
+                                'response':'error',
+                                'content':'Already logged in'}
+                    self.send_data(response)
                 else:
-                    #login successfull
-                    #add user in users
                     clients[self] = content
-                    #Send history
-
                     response = {'timestamp':time.strftime("%H:%M:%S"),
                                 'sender':'server',
                                 'response':'info',
@@ -104,10 +107,10 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                     names = ""
                     for client in clients:
                         names += clients[client] + " "
-                        response = {'timestamp':time.strftime("%H:%M:%S"),
-                                    'sender':clients[self],
-                                    'response':'info',
-                                    'content':names}
+                    response = {'timestamp':time.strftime("%H:%M:%S"),
+                                'sender':clients[self],
+                                'response':'info',
+                                'content':names}
                     self.send_data(response)
                 else:
                     response = {'timestamp':time.strftime("%H:%M:%S"),
